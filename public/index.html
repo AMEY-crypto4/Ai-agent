@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Agent — describe it, get a module</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>AI Agent</h1>
+      <p class="subtitle">
+        Describe what you need in plain language. The agent will design and write a working
+        software module for you — no request limits imposed by this app.
+      </p>
+    </header>
+
+    <section class="form">
+      <label for="requirement">What do you want built?</label>
+      <textarea
+        id="requirement"
+        rows="6"
+        placeholder="e.g. A command-line tool that converts CSV files to JSON, with a --pretty flag for indented output."
+      ></textarea>
+
+      <label for="projectName">Project name (optional)</label>
+      <input id="projectName" type="text" placeholder="csv-to-json" />
+
+      <button id="generateBtn">Generate module</button>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section id="result" class="result hidden">
+      <h2>Summary</h2>
+      <p id="summary"></p>
+
+      <div class="files-panel">
+        <div id="fileList" class="file-list"></div>
+        <pre id="fileContent" class="file-content"><code></code></pre>
+      </div>
+
+      <a id="downloadLink" class="download-link hidden" href="#">Download project as .zip</a>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
