@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseGeneratedFiles } from "../src/core/parseResponse.js";
+import { parseGeneratedFiles, parseRefinementResponse } from "../src/core/parseResponse.js";
 
 describe("parseGeneratedFiles", () => {
   it("extracts summary and files from a well-formed response", () => {
@@ -67,5 +67,55 @@ content
 `;
     const result = parseGeneratedFiles(raw);
     expect(result.files[0].path).toBe("src/index.js");
+  });
+
+  it("refuses to overwrite the reserved metadata file", () => {
+    const raw = `### FILE: .agent-meta.json
+{}
+### END FILE
+`;
+    expect(() => parseGeneratedFiles(raw)).toThrow(/reserved file/);
+  });
+});
+
+describe("parseRefinementResponse", () => {
+  it("extracts only the changed files plus any deletions", () => {
+    const raw = `Added a --pretty flag and removed the old helper.
+
+### FILE: index.js
+console.log("updated");
+### END FILE
+
+### DELETE FILE: legacy-helper.js
+`;
+    const result = parseRefinementResponse(raw);
+
+    expect(result.summary).toBe("Added a --pretty flag and removed the old helper.");
+    expect(result.upserts).toEqual([{ path: "index.js", content: 'console.log("updated");' }]);
+    expect(result.deletes).toEqual(["legacy-helper.js"]);
+  });
+
+  it("supports deletion-only responses", () => {
+    const raw = `Removing an unused file.
+
+### DELETE FILE: unused.js
+`;
+    const result = parseRefinementResponse(raw);
+    expect(result.upserts).toEqual([]);
+    expect(result.deletes).toEqual(["unused.js"]);
+  });
+
+  it("throws when a path is both updated and deleted", () => {
+    const raw = `### FILE: a.js
+new content
+### END FILE
+
+### DELETE FILE: a.js
+`;
+    expect(() => parseRefinementResponse(raw)).toThrow(/both updated and deleted/);
+  });
+
+  it("throws when there are no changes at all", () => {
+    expect(() => parseRefinementResponse("just prose, nothing to do")).toThrow(/No changes found/);
   });
 });

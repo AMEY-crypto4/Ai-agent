@@ -7,42 +7,67 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page">
-    <header>
-      <h1>AI Agent</h1>
-      <p class="subtitle">
-        Describe what you need in plain language. The agent will design and write a working
-        software module for you — no request limits imposed by this app.
-      </p>
-    </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Projects</h2>
+      <button id="newProjectBtn" class="secondary">+ New project</button>
+      <div id="projectList" class="project-list"></div>
+    </aside>
 
-    <section class="form">
-      <label for="requirement">What do you want built?</label>
-      <textarea
-        id="requirement"
-        rows="6"
-        placeholder="e.g. A command-line tool that converts CSV files to JSON, with a --pretty flag for indented output."
-      ></textarea>
+    <main class="page">
+      <header>
+        <h1>AI Agent</h1>
+        <p class="subtitle">
+          Describe what you need in plain language. The agent designs it, writes the code,
+          checks it for syntax errors, and fixes what it finds — no request limits imposed by
+          this app.
+        </p>
+      </header>
 
-      <label for="projectName">Project name (optional)</label>
-      <input id="projectName" type="text" placeholder="csv-to-json" />
+      <section id="createForm" class="form">
+        <label for="requirement">What do you want built?</label>
+        <textarea
+          id="requirement"
+          rows="6"
+          placeholder="e.g. A command-line tool that converts CSV files to JSON, with a --pretty flag for indented output."
+        ></textarea>
 
-      <button id="generateBtn">Generate module</button>
-      <p id="status" class="status" role="status"></p>
-    </section>
+        <label for="projectName">Project name (optional)</label>
+        <input id="projectName" type="text" placeholder="csv-to-json" />
 
-    <section id="result" class="result hidden">
-      <h2>Summary</h2>
-      <p id="summary"></p>
+        <button id="generateBtn">Generate module</button>
+      </section>
 
-      <div class="files-panel">
-        <div id="fileList" class="file-list"></div>
-        <pre id="fileContent" class="file-content"><code></code></pre>
-      </div>
+      <section id="log" class="log hidden">
+        <h2>Agent activity</h2>
+        <ul id="logList"></ul>
+      </section>
 
-      <a id="downloadLink" class="download-link hidden" href="#">Download project as .zip</a>
-    </section>
-  </main>
+      <section id="result" class="result hidden">
+        <div class="result-header">
+          <h2 id="resultTitle">Summary</h2>
+          <a id="downloadLink" class="download-link hidden" href="#">Download project as .zip</a>
+        </div>
+        <p id="summary"></p>
+        <ul id="warnings" class="warnings hidden"></ul>
+
+        <div class="files-panel">
+          <div id="fileList" class="file-list"></div>
+          <pre id="fileContent" class="file-content"><code></code></pre>
+        </div>
+
+        <div class="refine-box">
+          <label for="feedback">Ask the agent to change something</label>
+          <textarea
+            id="feedback"
+            rows="3"
+            placeholder="e.g. Add a --delimiter flag so it also handles semicolon-separated files."
+          ></textarea>
+          <button id="refineBtn">Refine module</button>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
